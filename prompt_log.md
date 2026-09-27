@@ -86,3 +86,36 @@ files and pushed to `origin/main` (`b36476a`), and flagged a separate issue visi
 ("It looks like we don't have access to your repo") — Render's GitHub App isn't fully authorized
 for this repo, which is worth fixing in Render's GitHub settings so future pushes reliably trigger
 deploys.
+
+### 3. Wiring the bot into the actual website
+> "Ok, great I think everythihg is working can you now write the code so that the chatbot actually
+> shows up on the website. Make add it somwhere convivnent on the website itself and also to the
+> projects tab, now that there are more than 3 projects, make the projects tab scrollable from left
+> to right with the latest project to the left"
+
+This part of the work happened in the portfolio repo, not this one — see
+[`VedaantK.github.io`'s `Prompts.txt`](https://github.com/VedaantK/VedaantK.github.io/blob/main/Prompts.txt)
+(prompts 12–13) for the full detail. Short version: Claude added a floating chat widget
+(`chat.js`) that calls this backend's `/chat` endpoint, added a "Chat with Vedaant.EXE" project
+card, and turned the Projects section into a horizontal scroller ordered newest to oldest.
+
+### 4. Going live
+> "Here https://vedaant-chat.onrender.com"
+
+Claude pointed the portfolio's chat widget at the real Render URL and verified the whole chain
+before pushing: `/health` returned 200, a real `/chat` call came back in character ("yo, not much
+planned yet. probably chilling, maybe do some rock climbing..."), and a CORS preflight from the
+actual `https://vedaantk.github.io` origin came back allowed.
+
+### 5. Wrapping up: prompt log, README, security check
+> "Can you make sure the prompt log is all up to date with all the conversations in this chat, Also
+> create a read me that describes everything in this project only. ... Finally, check once if my
+> API key has been leaked in any way."
+
+Claude backfilled this log with the rest of the session (this entry included), wrote `README.md`
+for this repo describing the chatbot backend on its own (persona → system prompt → FastAPI → OpenAI,
+project structure, local setup, Render deployment, AI usage, known limitations — not the portfolio
+site as a whole). For the leak check: searched this repo's full git history and current files for
+API-key-shaped strings (only match was the placeholder in `.env.example`), confirmed no `.env` file
+was ever tracked or exists locally, and checked GitHub's secret scanning alerts on both this repo
+and the portfolio repo — zero alerts on either. No evidence of a leaked key.
