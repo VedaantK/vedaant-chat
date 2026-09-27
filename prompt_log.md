@@ -74,3 +74,15 @@ domain, calls the OpenAI Chat Completions API), `requirements.txt`, `runtime.txt
 Smoke-tested the server locally (health check + a chat call with a fake key that correctly
 surfaced a 502 instead of crashing) before handing it back. Explained the OpenAI model tradeoff
 (gpt-4o-mini vs gpt-4o) and to set it via an `OPENAI_MODEL` env var in Render, not hardcoded.
+Held off on committing/pushing and asked first, since that touches the remote repo.
+
+### 2. Pushing the fix
+> *(Pasted a second Render build log showing the same failure, still on the old commit)*
+> "Yeah, you can go ahead and push everything. I made the changes that you said on render but
+> these were the response"
+
+The old build log was expected — nothing had been pushed yet. Claude committed the new backend
+files and pushed to `origin/main` (`b36476a`), and flagged a separate issue visible in the log
+("It looks like we don't have access to your repo") — Render's GitHub App isn't fully authorized
+for this repo, which is worth fixing in Render's GitHub settings so future pushes reliably trigger
+deploys.
