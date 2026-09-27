@@ -55,3 +55,22 @@ while the free tier wakes up, and handle errors on the frontend.
 
 Claude initialized this repo with a `.gitignore` (so `.env` files with API keys can never be
 committed) and committed the questionnaire and this log.
+
+---
+
+## Session 2 — 2026-09-27
+
+### 1. Fixing the failed Render build
+> *(Pasted a Render build log)* "It looks like ... ERROR: Could not open requirements file ...
+> can you make the requirements photo and everything else that is needed to get everything up and
+> running. Also how do I pick which model I use to act as me for the site"
+
+Claude found the repo only had the persona questionnaire and prompt log committed — no backend
+code existed yet, which is why Render couldn't find `requirements.txt`. It built the actual
+FastAPI backend: `system_prompt.md` (the persona answers rewritten as model instructions instead
+of a raw Q&A dump), `app.py` (`/health` and `/chat` endpoints, CORS locked to the GitHub Pages
+domain, calls the OpenAI Chat Completions API), `requirements.txt`, `runtime.txt` (pinned Python
+3.11 instead of Render's default 3.14 to avoid wheel-availability issues), and `.env.example`.
+Smoke-tested the server locally (health check + a chat call with a fake key that correctly
+surfaced a 502 instead of crashing) before handing it back. Explained the OpenAI model tradeoff
+(gpt-4o-mini vs gpt-4o) and to set it via an `OPENAI_MODEL` env var in Render, not hardcoded.
